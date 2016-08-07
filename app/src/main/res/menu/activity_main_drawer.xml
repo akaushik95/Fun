@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_library_music_black_48dp"
             android:title="Library" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_playlist_add_black_48dp"
             android:title="Playlists" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Playong Queue" />
+            android:icon="@drawable/ic_playlist_add_check_black_48dp"
+            android:title="Playing Queue" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_play_circle_filled_white_black_48dp"
             android:title="Now Playing" />
         <item
             android:id="@+id/nav_login"

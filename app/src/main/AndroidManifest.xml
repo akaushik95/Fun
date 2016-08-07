@@ -25,7 +25,9 @@
             android:name=".TabbedActivity"
             android:label="@string/title_activity_tabbed"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NowPlaying"></activity>
+        <activity android:name=".NowPlaying"
+
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
