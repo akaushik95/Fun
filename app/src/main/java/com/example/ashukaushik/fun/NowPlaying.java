@@ -111,6 +111,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             playb.setText("PLAY");
             mp.stop();
             mp.seekTo(0);
+
 //            sb.setProgress();
         }else if(id == R.id.next){
 

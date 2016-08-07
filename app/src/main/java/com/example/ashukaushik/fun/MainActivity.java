@@ -32,18 +32,37 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    static ArrayList<File> songs=new ArrayList<>();;
+    static ArrayAdapter<String> adapter;
+    static ArrayList<String> songNames=new ArrayList<>();;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
-
+    //Added drawer
+    DrawerLayout drawer;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+         toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+        songs=getSongs(Environment.getExternalStorageDirectory());
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        for(int i=0;i<songs.size();i++){
+
+            mmr.setDataSource(songs.get(i).getPath());
+            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            if(albumName!=null)
+                songNames.add(albumName);
+            else
+                songNames.add(songs.get(i).getName());
+//            songNames.add(songs.get(i).getName().toString());
+        }
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
@@ -74,7 +93,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -155,23 +174,7 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
-            ArrayList<File> songs;
-            ArrayAdapter<String> adapter;
-            ArrayList<String> songNames;
             ListView lv=(ListView)rootView.findViewById(R.id.listView) ;
-            songNames=new ArrayList<>();
-            songs=new ArrayList<>();
-            songs=getSongs(Environment.getExternalStorageDirectory());
-            for(int i=0;i<songs.size();i++){
-                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                mmr.setDataSource(songs.get(i).getPath());
-                String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                if(albumName!=null)
-                    songNames.add(albumName);
-                else
-                    songNames.add(songs.get(i).getName());
-//            songNames.add(songs.get(i).getName().toString());
-            }
             adapter=new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,songNames);
             lv.setAdapter(adapter);
             final ArrayList<File> finalSongs = songs;
@@ -189,13 +192,14 @@ public class MainActivity extends AppCompatActivity
     public static ArrayList<File> getSongs(File root) {
         ArrayList<File> songs=new ArrayList<>();
         File[] files=root.getAbsoluteFile().listFiles();
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         for(File singleFile:files){
             if(singleFile.isDirectory()&& !singleFile.isHidden()){
                 songs.addAll(getSongs(singleFile));
             }
             else{
                 if(singleFile.getName().endsWith(".mp3")){
-                    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
                     mmr.setDataSource(singleFile.getPath());
                     if(mmr.METADATA_KEY_DURATION<=50000){
                         songs.add(singleFile);
@@ -214,8 +218,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+
             return PlaceholderFragment.newInstance(position + 1);
         }
 
