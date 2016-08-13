@@ -37,6 +37,12 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     ImageView mAlbumArtImageView;
 
     @Override
+    public void onBackPressed() {
+        mMediaPlayer.stop();
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_now_playing);
@@ -108,7 +114,6 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     }
 
 
-
     @SuppressLint("NewApi")
     @Override
     public void onClick(View v) {
@@ -121,7 +126,8 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
                 mMediaPlayer.start();
                 mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
             }
-        }else if(id == R.id.nextSongButton){
+        }
+        else if(id == R.id.nextSongButton){
             if(mMediaPlayer != null) {
                 try{
                     mMediaPlayer.stop(); //error
@@ -138,7 +144,8 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             mSeekBar.setMax(mMediaPlayer.getDuration());
             setScreen(position,songsList);
             mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
-        }else if(id == R.id.previousSongButton){
+        }
+        else if(id == R.id.previousSongButton){
             if(mMediaPlayer != null) {
                 try{
                     mMediaPlayer.stop(); //error
@@ -170,14 +177,11 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
             mSongNameTextView.setText(titleName);
         }
         byte[] artBytes =  mMediaMetadataRetriever.getEmbeddedPicture();
-        if(artBytes!=null)
-        {
-
+        if(artBytes!=null){
             Bitmap bm = BitmapFactory.decodeByteArray(artBytes, 0, artBytes.length);
             mAlbumArtImageView.setImageBitmap(bm);
         }
-        else
-        {
+        else{
             mAlbumArtImageView.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_48dp));
         }
     }
