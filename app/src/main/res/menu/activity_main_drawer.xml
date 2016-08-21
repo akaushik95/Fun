@@ -3,23 +3,23 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/libraryMenu"
             android:icon="@drawable/ic_library_music_black_48dp"
             android:title="Library" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/playlistsMenu"
             android:icon="@drawable/ic_playlist_add_black_48dp"
             android:title="Playlists" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/queueMenu"
             android:icon="@drawable/ic_playlist_add_check_black_48dp"
             android:title="Playing Queue" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nowPlayingMenu"
             android:icon="@drawable/ic_play_circle_filled_white_black_48dp"
             android:title="Now Playing" />
         <item
-            android:id="@+id/nav_login"
+            android:id="@+id/loginMenu"
             android:icon="@drawable/ic_menu_manage"
             android:title="Login" />
     </group>
@@ -27,15 +27,15 @@
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/shareMenu"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Settings" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/sendMenu"
                 android:icon="@drawable/ic_menu_send"
                 android:title="About" />
             <item
-                android:id="@+id/nav_help"
+                android:id="@+id/settingsMenu"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Help and Feedback" />
         </menu>

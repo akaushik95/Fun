@@ -1,5 +1,6 @@
 package com.example.ashukaushik.fun;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -30,39 +32,44 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    static ArrayList<File> songs=new ArrayList<>();;
-    static ArrayAdapter<String> adapter;
-    static ArrayList<String> songNames=new ArrayList<>();;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    static ArrayList<Songs> songs=new ArrayList<>();
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    //Added drawer
+    static SongListAdapter adapter;
+
     DrawerLayout drawer;
     Toolbar toolbar;
+
+//    public static String removeUnwantedChararctersFromString(String s){
+//        String str=s.toLowerCase();
+//        String snew="";
+//        int count=0;
+//        for(int i=0;i<s.length();i++){
+//            if((str.charAt(i)>='a' && str.charAt(i)<='z')||(str.charAt(i)==' ')){
+//                if(str.charAt(i)==' ' && snew!=null){
+//                    count++;
+//                }
+//                snew=snew+str.charAt(i);
+//                if(count==2){
+//                    return snew;
+//                }
+//            }else{
+//                continue;
+//            }
+//        }
+//        return snew;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         toolbar= (Toolbar) findViewById(R.id.toolbar);
+        toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         songs=getSongs(Environment.getExternalStorageDirectory());
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        for(int i=0;i<songs.size();i++){
-
-            mmr.setDataSource(songs.get(i).getPath());
-            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-            if(albumName!=null)
-                songNames.add(albumName);
-            else
-                songNames.add(songs.get(i).getName());
-//            songNames.add(songs.get(i).getName().toString());
-        }
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
@@ -129,17 +136,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.libraryMenu) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.playlistsMenu) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.queueMenu) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nowPlayingMenu) {
+//            Intent i=new Intent();
+//            i.setClass(this,NowPlaying.class);
+//            startActivity(i);
+        } else if (id == R.id.shareMenu) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.sendMenu) {
 
         }
 
@@ -175,13 +184,17 @@ public class MainActivity extends AppCompatActivity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
             ListView lv=(ListView)rootView.findViewById(R.id.listView) ;
-            adapter=new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,songNames);
+            adapter=new SongListAdapter(getActivity(),songs);
             lv.setAdapter(adapter);
-            final ArrayList<File> finalSongs = songs;
+            final ArrayList<Songs> finalSongs = songs;
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    startActivity(new Intent(getContext(),NowPlaying.class).putExtra("pos",position).putExtra("List", finalSongs));
+                    Intent i=new Intent();
+                    i.setClass(getContext(),NowPlaying.class);
+                    i.putExtra("pos",position);
+                    i.putExtra("List", finalSongs);
+                    startActivity(i);
                 }
             });
 
@@ -189,24 +202,29 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public static ArrayList<File> getSongs(File root) {
-        ArrayList<File> songs=new ArrayList<>();
+    public static ArrayList<Songs> getSongs(File root) {
+        ArrayList<Songs> songs=new ArrayList<>();
+        Songs songDataClassObj;
         File[] files=root.getAbsoluteFile().listFiles();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        for(File singleFile:files){
+        for( File singleFile:files){
             if(singleFile.isDirectory()&& !singleFile.isHidden()){
                 songs.addAll(getSongs(singleFile));
             }
             else{
                 if(singleFile.getName().endsWith(".mp3")){
+                    if(singleFile.getAbsoluteFile()!=null) {
+                        mmr.setDataSource(singleFile.getAbsolutePath());
 
-                    mmr.setDataSource(singleFile.getPath());
-                    if(mmr.METADATA_KEY_DURATION<=50000){
-                        songs.add(singleFile);
+                        if (mmr.METADATA_KEY_DURATION <= 50000) {
+                            songDataClassObj = new Songs(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE), mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST), mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM), mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION), singleFile.getPath(), mmr.getEmbeddedPicture());
+                            songs.add(songDataClassObj);
+                            Log.i("INFO",singleFile.getAbsolutePath());
+                        }
                     }
                 }
             }
-//            Toast.makeText(getApplicationContext(),files.length+"",Toast.LENGTH_LONG).show();
+
         }
         return songs;
     }
@@ -241,5 +259,8 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
+
+
+
 
 }
