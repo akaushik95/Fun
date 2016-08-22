@@ -2,9 +2,11 @@ package com.example.ashukaushik.fun;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     static SongListAdapter adapter;
-
+    static ListView lv;
     DrawerLayout drawer;
     Toolbar toolbar;
 
@@ -66,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -183,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
-            ListView lv=(ListView)rootView.findViewById(R.id.listView) ;
+            lv=(ListView)rootView.findViewById(R.id.listView) ;
             adapter=new SongListAdapter(getActivity(),songs);
             lv.setAdapter(adapter);
             final ArrayList<Songs> finalSongs = songs;
@@ -217,7 +221,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         mmr.setDataSource(singleFile.getAbsolutePath());
 
                         if (mmr.METADATA_KEY_DURATION <= 50000) {
-                            songDataClassObj = new Songs(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE), mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST), mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM), mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION), singleFile.getPath(), mmr.getEmbeddedPicture());
+                            songDataClassObj = new Songs(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
+                                    mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
+                                    mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM),
+                                    mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION),
+                                    singleFile.getPath()/*, mmr.getEmbeddedPicture()*/);
                             songs.add(songDataClassObj);
                             Log.i("INFO",singleFile.getAbsolutePath());
                         }

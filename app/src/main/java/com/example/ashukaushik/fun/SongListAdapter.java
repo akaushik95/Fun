@@ -3,6 +3,7 @@ package com.example.ashukaushik.fun;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SongListAdapter extends ArrayAdapter<Songs>{
     ArrayList<Songs> mData;
     Context context;
+
     public SongListAdapter(Context context,ArrayList<Songs> Obj){
         super(context,0,Obj);
         this.context=context;
@@ -34,14 +36,14 @@ public class SongListAdapter extends ArrayAdapter<Songs>{
         }
         Songs obj=mData.get(position);
         TextView songName=(TextView) v.findViewById(R.id.songNameTextViewinSongLayout);
-        TextView songArtist=(TextView)v.findViewById(R.id.songMetadataTextViewinSongLayout);
+//        TextView songArtist=(TextView)v.findViewById(R.id.songMetadataTextViewinSongLayout);
         ImageView albumArt=(ImageView)v.findViewById(R.id.albumArtImageViewinSongLayout);
-        if(obj.getCoverArt()!=null){
-            Bitmap bm = BitmapFactory.decodeByteArray(obj.coverArt, 0, obj.coverArt.length);
-            albumArt.setImageBitmap(bm);
-        }
+//        if(obj.getCoverArt()!=null){
+//            Bitmap bm = BitmapFactory.decodeByteArray(obj.coverArt, 0, obj.coverArt.length);
+//            albumArt.setImageBitmap(bm);
+//        }
         songName.setText(obj.getSongName());
-        songArtist.setText(obj.getSongArtist());
+//        songArtist.setText(obj.getSongArtist());
         return v;
     }
 }

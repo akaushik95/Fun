@@ -44,7 +44,6 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     Button mPreviousSongButton;  // changed name of buttons from play to playb and so on. 26-07-2016
     Button mNextSongButton;
     Thread mThreadSeekBar;
-    String msongNameforInfo;
     TextView mSongNameTextView;
     CircleImageView mAlbumArtImageView;
 
@@ -85,75 +84,76 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         mNextSongButton=(Button)findViewById(R.id.nextSongButton);
 
 
-//        mPlayButton.setOnClickListener(this);
-//        mPreviousSongButton.setOnClickListener(this);
-//        mNextSongButton.setOnClickListener(this);
-//
-//        if (mMediaPlayer != null) {
-//            mMediaPlayer.stop();
-//            mMediaPlayer.release();
-//        }
+        mPlayButton.setOnClickListener(this);
+        mPreviousSongButton.setOnClickListener(this);
+        mNextSongButton.setOnClickListener(this);
 
-//        Intent i = getIntent();
-//        Bundle b = i.getExtras();
-//        songsList = (ArrayList) b.getParcelableArrayList("List");
-//        position = b.getInt("pos", 0);
-//        setScreen(position,songsList);
-//        u = Uri.parse(songsList.get(position).toString());
-//        mMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
-//        mMediaPlayer.start();
-//
-//        setScreen(position,songsList);
-//        mSeekBar.setMax(mMediaPlayer.getDuration());
-//        mThreadSeekBar.start();
-//        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//                mMediaPlayer.seekTo(seekBar.getProgress());
-//            }
-//        });
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+        }
+
+        Intent i = getIntent();
+        Bundle b = i.getExtras();
+        songsList = (ArrayList) b.getParcelableArrayList("List");
+        position = b.getInt("pos", 0);
+        setScreen(position,songsList);
+        u = Uri.parse(songsList.get(position).getSongPath().toString());
+        mMediaPlayer = MediaPlayer.create(getApplicationContext(), u);
+
+        mMediaPlayer.start();
+
+        setScreen(position,songsList);
+        mSeekBar.setMax(mMediaPlayer.getDuration());
+        mThreadSeekBar.start();
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mMediaPlayer.seekTo(seekBar.getProgress());
+            }
+        });
 
     }
-//
-////    public static String removeUnwantedChararctersFromString(String s){
-////        String str=s.toLowerCase();
-////        String snew="";
-////        int count=0;
-////        for(int i=0;i<s.length();i++){
-////            if((str.charAt(i)>='a' && str.charAt(i)<='z')||(str.charAt(i)==' ')){
-////                if(str.charAt(i)==' ' && snew!=null){
-////                    count++;
-////                }
-////                snew=snew+str.charAt(i);
-////                if(count==2){
-////                    return snew;
-////                }
-////            }else{
-////                continue;
-////            }
-////        }
-////        return snew;
-////    }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.now_playing_menu,menu);
-//        return true;
+
+//    public static String removeUnwantedChararctersFromString(String s){
+//        String str=s.toLowerCase();
+//        String snew="";
+//        int count=0;
+//        for(int i=0;i<s.length();i++){
+//            if((str.charAt(i)>='a' && str.charAt(i)<='z')||(str.charAt(i)==' ')){
+//                if(str.charAt(i)==' ' && snew!=null){
+//                    count++;
+//                }
+//                snew=snew+str.charAt(i);
+//                if(count==2){
+//                    return snew;
+//                }
+//            }else{
+//                continue;
+//            }
+//        }
+//        return snew;
 //    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if(item.getItemId()==R.id.getInfo){
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.now_playing_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.getInfo){
 //            Retrofit retrofit=new Retrofit.Builder().baseUrl("https://itunes.apple.com/")
 //                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create())).build();
 //
@@ -176,82 +176,83 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
 //
 //                }
 //            });
-//
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//
-//    @SuppressLint("NewApi")
-//    @Override
-    public void onClick(View v) {
-//        int id=v.getId();
-//        if(id == R.id.playButton){
-//            if(mMediaPlayer.isPlaying()){
-//                mPlayButton.setBackground(getDrawable(R.drawable.ic_play_circle_filled_white_black_48dp));
-//                mMediaPlayer.pause();
-//            }else{
-//                mMediaPlayer.start();
-//                mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
-//            }
-//        }
-//        else if(id == R.id.nextSongButton){
-//            if(mMediaPlayer != null) {
-//                try{
-//                    mMediaPlayer.stop(); //error
-//                    mMediaPlayer.reset();
-//                    mMediaPlayer.release();
-//                }catch(Exception e){
-//                    Log.d("Notify", e.toString());
-//                }
-//            }
-//            position=(position+1)%songsList.size();
-//            u=Uri.parse(songsList.get(position).toString());
-//            mMediaPlayer=MediaPlayer.create(getApplicationContext(),u);
-//            mMediaPlayer.start();
-//            mSeekBar.setMax(mMediaPlayer.getDuration());
-//            setScreen(position,songsList);
-//            mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
-//        }
-//        else if(id == R.id.previousSongButton){
-//            if(mMediaPlayer != null) {
-//                try{
-//                    mMediaPlayer.stop(); //error
-//                    mMediaPlayer.reset();
-//                    mMediaPlayer.release();
-//                }catch(Exception e){
-//                    Log.d("Notify", e.toString());
-//                }
-//            }
-//            position=(position-1)<0?songsList.size()-1:position-1;
-//            u=Uri.parse(songsList.get(position).toString());
-//            mMediaPlayer=MediaPlayer.create(getApplicationContext(),u);
-//            mMediaPlayer.start();
-//            mSeekBar.setMax(mMediaPlayer.getDuration());
-//            setScreen(position,songsList);
-//            mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
-//        }
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
-//
-//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-//    public void setScreen(int position, ArrayList<Songs> songsList){
-//        MediaMetadataRetriever mMediaMetadataRetriever=new MediaMetadataRetriever();
-//        mMediaMetadataRetriever.setDataSource(songsList.get(position).getSongPath());
-//        String titleName = mMediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-//        if(titleName==null){
-//            mSongNameTextView.setText("No meta data");
-//        }
-//        else {
-////            mSongNameTextView.setText(removeUnwantedChararctersFromString(titleName));
-//            msongNameforInfo=mSongNameTextView.getText().toString();
-//        }
-//        byte[] artBytes =  mMediaMetadataRetriever.getEmbeddedPicture();
-//        if(artBytes!=null){
-//            Bitmap bm = BitmapFactory.decodeByteArray(artBytes, 0, artBytes.length);
-//            mAlbumArtImageView.setImageBitmap(bm);
-//        }
-//        else{
-//            mAlbumArtImageView.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_48dp));
-//        }
-//    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void onClick(View v) {
+        int id=v.getId();
+        if(id == R.id.playButton){
+            if(mMediaPlayer.isPlaying()){
+                mPlayButton.setBackground(getDrawable(R.drawable.ic_play_circle_filled_white_black_48dp));
+                mMediaPlayer.pause();
+            }else{
+                mMediaPlayer.start();
+                mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
+            }
+        }
+        else if(id == R.id.nextSongButton){
+            if(mMediaPlayer != null) {
+                try{
+                    mMediaPlayer.stop(); //error
+                    mMediaPlayer.reset();
+                    mMediaPlayer.release();
+                }catch(Exception e){
+                    Log.d("Notify", e.toString());
+                }
+            }
+            position=(position+1)%songsList.size();
+            u=Uri.parse(songsList.get(position).getSongPath().toString());
+            mMediaPlayer=MediaPlayer.create(getApplicationContext(),u);
+            mMediaPlayer.start();
+            mSeekBar.setMax(mMediaPlayer.getDuration());
+            mSeekBar.setProgress(0);
+            setScreen(position,songsList);
+            mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
+        }
+        else if(id == R.id.previousSongButton){
+            if(mMediaPlayer != null) {
+                try{
+                    mMediaPlayer.stop(); //error
+                    mMediaPlayer.reset();
+                    mMediaPlayer.release();
+                }catch(Exception e){
+                    Log.d("Notify", e.toString());
+                }
+            }
+            position=(position-1)<0?songsList.size()-1:position-1;
+            u=Uri.parse(songsList.get(position).getSongPath().toString());
+            mMediaPlayer=MediaPlayer.create(getApplicationContext(),u);
+            mMediaPlayer.start();
+            mSeekBar.setMax(mMediaPlayer.getDuration());
+            mSeekBar.setProgress(0);
+            setScreen(position,songsList);
+            mPlayButton.setBackground(getDrawable(R.drawable.ic_pause_circle_filled_black_48dp));
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setScreen(int position, ArrayList<Songs> songsList){
+        MediaMetadataRetriever mMediaMetadataRetriever=new MediaMetadataRetriever();
+        mMediaMetadataRetriever.setDataSource(songsList.get(position).getSongPath());
+        String titleName = mMediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        if(titleName==null){
+            mSongNameTextView.setText("JUST ENJOY");
+        }
+        else {
+            mSongNameTextView.setText(titleName);
+        }
+        byte[] artBytes =  mMediaMetadataRetriever.getEmbeddedPicture();
+        if(artBytes!=null){
+            Bitmap bm = BitmapFactory.decodeByteArray(artBytes, 0, artBytes.length);
+            mAlbumArtImageView.setImageBitmap(bm);
+        }
+        else{
+            mAlbumArtImageView.setImageDrawable(getDrawable(R.drawable.ic_favorite_black_48dp));
+        }
+    }
 }

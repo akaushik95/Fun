@@ -1,23 +1,28 @@
 package com.example.ashukaushik.fun;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by ashukaushik on 19/08/16.
  */
-public class Songs {
+public class Songs implements Serializable{
     public String songName;
     public String songArtist;
     public String songAlbum;
     public String songDuration;
     public String songPath;
-    public byte[] coverArt;
+//    public byte[] coverArt;
 
-    public byte[] getCoverArt() {
-        return coverArt;
-    }
-
-    public void setCoverArt(byte[] coverArt) {
-        this.coverArt = coverArt;
-    }
+//    public byte[] getCoverArt() {
+//        return coverArt;
+//    }
+//
+//    public void setCoverArt(byte[] coverArt) {
+//        this.coverArt = coverArt;
+//    }
 
     public String getSongPath() {
         return songPath;
@@ -27,23 +32,23 @@ public class Songs {
         this.songPath = songPath;
     }
 
-    public Songs(String songName, String songArtist, String songAlbum, String songDuration, String songPath,byte[] coverArt) {
+    public Songs(String songName, String songArtist, String songAlbum, String songDuration, String songPath/*,byte[] coverArt*/) {
         if(songName!=null)
             this.songName = songName;
         else
-            this.songName="Unknown";
+            this.songName="Unknown name";
         if(songArtist!=null)
             this.songArtist = songArtist;
         else
-            this.songArtist="Unknown";
+            this.songArtist="Unknown Artist";
         if(songAlbum!=null)
             this.songAlbum = songAlbum;
         else
-            this.songName="Unknown Album";
+            this.songAlbum="Unknown Album";
 
         this.songDuration = songDuration;
         this.songPath=songPath;
-        this.coverArt=coverArt;
+//        this.coverArt=coverArt;
 
     }
 
@@ -78,4 +83,5 @@ public class Songs {
     public void setSongDuration(String songDuration) {
         this.songDuration = songDuration;
     }
+
 }
