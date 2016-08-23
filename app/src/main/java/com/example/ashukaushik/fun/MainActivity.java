@@ -1,6 +1,5 @@
 package com.example.ashukaushik.fun;
 
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,8 +23,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,7 +30,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SongListAdapterSongs.songsListListener,
         SongListAdapterAlbums.songsListListener, SongListAdapterArtists.songsListListener {
     static ArrayList<Songs> songs=new ArrayList<>();
-
+    static ArrayList<SongsWithoutCoverArt> songsWithoutCoverArt =new ArrayList<>();
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     static SongListAdapterSongs songsAdapter;
@@ -75,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         songs=getSongs(Environment.getExternalStorageDirectory());
-
+        songsWithoutCoverArt =getSongsWithoutCoverArt(Environment.getExternalStorageDirectory());
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -161,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent=new Intent();
         intent.setClass(getApplicationContext(),NowPlaying.class);
         intent.putExtra("pos",i);
-        final ArrayList<Songs> finalSongs = songs;
+        final ArrayList<SongsWithoutCoverArt> finalSongs = songsWithoutCoverArt;
         intent.putExtra("List", finalSongs);
         startActivity(intent);
 
@@ -195,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
             rv=(RecyclerView)rootView.findViewById(R.id.recyclerView);
-            songsAdapter=new SongListAdapterSongs(getActivity(),songs, (SongListAdapterSongs.songsListListener) getActivity());
+            songsAdapter=new SongListAdapterSongs(getActivity(), songs, (SongListAdapterSongs.songsListListener) getActivity());
             rv.setAdapter(songsAdapter);
             LinearLayoutManager lm=new LinearLayoutManager(getActivity());
             lm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -295,7 +291,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
                                     mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM),
                                     mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION),
-                                    singleFile.getPath()/*, mmr.getEmbeddedPicture()*/);
+                                    singleFile.getPath(), mmr.getEmbeddedPicture());
+                            songs.add(songDataClassObj);
+                            Log.i("INFO",singleFile.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+
+        }
+        return songs;
+    }
+
+    public static ArrayList<SongsWithoutCoverArt> getSongsWithoutCoverArt(File root) {
+        ArrayList<SongsWithoutCoverArt> songs=new ArrayList<>();
+        SongsWithoutCoverArt songDataClassObj;
+        File[] files=root.getAbsoluteFile().listFiles();
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        for( File singleFile:files){
+            if(singleFile.isDirectory()&& !singleFile.isHidden()){
+                songs.addAll(getSongsWithoutCoverArt(singleFile));
+            }
+            else{
+                if(singleFile.getName().endsWith(".mp3")){
+                    if(singleFile.getAbsoluteFile()!=null) {
+                        mmr.setDataSource(singleFile.getAbsolutePath());
+
+                        if (mmr.METADATA_KEY_DURATION <= 50000) {
+                            songDataClassObj = new SongsWithoutCoverArt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
+                                    mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
+                                    mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM),
+                                    mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION),
+                                    singleFile.getPath());
                             songs.add(songDataClassObj);
                             Log.i("INFO",singleFile.getAbsolutePath());
                         }

@@ -39,10 +39,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 //        Songs obj=mData.get(position);
 //        TextView songName=(TextView) v.findViewById(R.id.songNameTextViewinSongLayout);
 //        ImageView albumArt=(ImageView)v.findViewById(R.id.albumArtImageViewinSongLayout);
-////        if(obj.getCoverArt()!=null){
-////            Bitmap bm = BitmapFactory.decodeByteArray(obj.coverArt, 0, obj.coverArt.length);
-////            albumArt.setImageBitmap(bm);
-////        }
+//        if(obj.getCoverArt()!=null){
+//            Bitmap bm = BitmapFactory.decodeByteArray(obj.coverArt, 0, obj.coverArt.length);
+//            albumArt.setImageBitmap(bm);
+//        }
 //        songName.setText(obj.getSongName());
 //        return v;
 //    }
@@ -80,6 +80,10 @@ public class SongListAdapterSongs extends RecyclerView.Adapter<SongListAdapterSo
     public void onBindViewHolder(SongListAdapterSongs.ourHolder holder, int position) {
         final Songs songs = mData.get(position);
         holder.tv1.setText(songs.getSongName());
+        if(songs.getCoverArt()!=null){
+            Bitmap bm = BitmapFactory.decodeByteArray(songs.coverArt, 0, songs.coverArt.length);
+            holder.albumArt.setImageBitmap(bm);
+        }
         holder.tv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

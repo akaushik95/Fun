@@ -1,28 +1,16 @@
 package com.example.ashukaushik.fun;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
 /**
- * Created by ashukaushik on 19/08/16.
+ * Created by ashukaushik on 23/08/16.
  */
-public class Songs implements Serializable{
+public class SongsWithoutCoverArt implements Serializable {
     public String songName;
     public String songArtist;
     public String songAlbum;
     public String songDuration;
     public String songPath;
-    public byte[] coverArt;
-
-    public byte[] getCoverArt() {
-        return coverArt;
-    }
-
-    public void setCoverArt(byte[] coverArt) {
-        this.coverArt = coverArt;
-    }
 
     public String getSongPath() {
         return songPath;
@@ -32,7 +20,7 @@ public class Songs implements Serializable{
         this.songPath = songPath;
     }
 
-    public Songs(String songName, String songArtist, String songAlbum, String songDuration, String songPath, byte[] coverArt) {
+    public SongsWithoutCoverArt(String songName, String songArtist, String songAlbum, String songDuration, String songPath) {
         if(songName!=null)
             this.songName = songName;
         else
@@ -49,8 +37,6 @@ public class Songs implements Serializable{
         this.songDuration = songDuration;
 
         this.songPath=songPath;
-
-        this.coverArt=coverArt;
 
     }
 

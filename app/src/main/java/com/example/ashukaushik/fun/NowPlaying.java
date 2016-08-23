@@ -36,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NowPlaying extends AppCompatActivity implements View.OnClickListener {
     MediaPlayer mMediaPlayer;
-    ArrayList<Songs> songsList;
+    ArrayList<SongsWithoutCoverArt> songsList;
     int position;
     Uri u;
     SeekBar mSeekBar;
@@ -236,7 +236,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void setScreen(int position, ArrayList<Songs> songsList){
+    public void setScreen(int position, ArrayList<SongsWithoutCoverArt> songsList){
         MediaMetadataRetriever mMediaMetadataRetriever=new MediaMetadataRetriever();
         mMediaMetadataRetriever.setDataSource(songsList.get(position).getSongPath());
         String titleName = mMediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);

@@ -1,6 +1,8 @@
 package com.example.ashukaushik.fun;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +82,10 @@ public class SongListAdapterAlbums extends RecyclerView.Adapter<SongListAdapterA
     public void onBindViewHolder(SongListAdapterAlbums.ourHolder holder, int position) {
         final Songs songs = mData.get(position);
         holder.tv1.setText(songs.getSongAlbum());
+        if(songs.getCoverArt()!=null){
+            Bitmap bm = BitmapFactory.decodeByteArray(songs.coverArt, 0, songs.coverArt.length);
+            holder.albumArt.setImageBitmap(bm);
+        }
         holder.tv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
