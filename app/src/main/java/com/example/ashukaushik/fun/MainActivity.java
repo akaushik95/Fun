@@ -1,19 +1,18 @@
 package com.example.ashukaushik.fun;
 
-import android.content.ContentValues;
+import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,20 +26,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SongListAdapterSongs.songsListListener,
+        SongListAdapterAlbums.songsListListener, SongListAdapterArtists.songsListListener {
     static ArrayList<Songs> songs=new ArrayList<>();
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    static SongListAdapter adapter;
-    static ListView lv;
+    static SongListAdapterSongs songsAdapter;
+    static SongListAdapterAlbums albumsAdapter;
+    static SongListAdapterArtists artistsAdapter;
+
+    static RecyclerView rv;
     DrawerLayout drawer;
     Toolbar toolbar;
 
@@ -83,14 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -161,6 +155,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
+    public void songClicked(Songs s) {
+        int i=songs.indexOf(s);
+        Intent intent=new Intent();
+        intent.setClass(getApplicationContext(),NowPlaying.class);
+        intent.putExtra("pos",i);
+        final ArrayList<Songs> finalSongs = songs;
+        intent.putExtra("List", finalSongs);
+        startActivity(intent);
+
+    }
+
+
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -187,21 +194,84 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
-            lv=(ListView)rootView.findViewById(R.id.listView) ;
-            adapter=new SongListAdapter(getActivity(),songs);
-            lv.setAdapter(adapter);
-            final ArrayList<Songs> finalSongs = songs;
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent i=new Intent();
-                    i.setClass(getContext(),NowPlaying.class);
-                    i.putExtra("pos",position);
-                    i.putExtra("List", finalSongs);
-                    startActivity(i);
-                }
-            });
+            rv=(RecyclerView)rootView.findViewById(R.id.recyclerView);
+            songsAdapter=new SongListAdapterSongs(getActivity(),songs, (SongListAdapterSongs.songsListListener) getActivity());
+            rv.setAdapter(songsAdapter);
+            LinearLayoutManager lm=new LinearLayoutManager(getActivity());
+            lm.setOrientation(LinearLayoutManager.VERTICAL);
+            rv.setLayoutManager(lm);
+            return rootView;
+        }
+    }
 
+    public static class PlaceholderFragment1 extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number_1";
+
+        public PlaceholderFragment1() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment1 newInstance(int sectionNumber1) {
+            PlaceholderFragment1 fragment1 = new PlaceholderFragment1();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber1);
+            fragment1.setArguments(args);
+            return fragment1;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
+            rv=(RecyclerView)rootView.findViewById(R.id.recyclerView);
+            albumsAdapter=new SongListAdapterAlbums(getActivity(),songs, (SongListAdapterAlbums.songsListListener) getActivity());
+            rv.setAdapter(albumsAdapter);
+            LinearLayoutManager lm=new LinearLayoutManager(getActivity());
+            lm.setOrientation(LinearLayoutManager.VERTICAL);
+            rv.setLayoutManager(lm);
+            return rootView;
+        }
+    }
+
+    public static class PlaceholderFragment2 extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number_2";
+
+        public PlaceholderFragment2() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment2 newInstance(int sectionNumber2) {
+            PlaceholderFragment2 fragment2 = new PlaceholderFragment2();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber2);
+            fragment2.setArguments(args);
+            return fragment2;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_tabbed, container, false);
+            rv=(RecyclerView)rootView.findViewById(R.id.recyclerView);
+            artistsAdapter=new SongListAdapterArtists(getActivity(),songs, (SongListAdapterArtists.songsListListener) getActivity());
+            rv.setAdapter(artistsAdapter);
+            LinearLayoutManager lm=new LinearLayoutManager(getActivity());
+            lm.setOrientation(LinearLayoutManager.VERTICAL);
+            rv.setLayoutManager(lm);
             return rootView;
         }
     }
@@ -244,7 +314,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public Fragment getItem(int position) {
-
+            if(position==0){
+                return PlaceholderFragment.newInstance(position+1);
+            }else if(position==1){
+                return PlaceholderFragment1.newInstance(position+1);
+            }else if(position==2){
+                return PlaceholderFragment2.newInstance(position+1);
+            }
             return PlaceholderFragment.newInstance(position + 1);
         }
 
