@@ -1,6 +1,7 @@
 package com.example.ashukaushik.fun;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -84,6 +85,9 @@ public class SongListAdapterArtists extends RecyclerView.Adapter<SongListAdapter
         holder.tv1.setText(songs.getSongArtist());
         if(songs.getCoverArt()!=null){
             Bitmap bm = BitmapFactory.decodeByteArray(songs.coverArt, 0, songs.coverArt.length);
+            holder.albumArt.setImageBitmap(bm);
+        }else{
+            Bitmap bm = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.noimageavailable);
             holder.albumArt.setImageBitmap(bm);
         }
         holder.tv1.setOnClickListener(new View.OnClickListener() {

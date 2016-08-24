@@ -35,9 +35,15 @@
             android:paddingTop="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:scaleType="fitXY"
                 android:src="@android:drawable/star_big_on"
                 android:id="@+id/albumArtImageView"/>
 

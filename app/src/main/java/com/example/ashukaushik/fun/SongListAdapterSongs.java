@@ -1,8 +1,10 @@
 package com.example.ashukaushik.fun;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -47,6 +51,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 //        return v;
 //    }
 //}
+
+
 public class SongListAdapterSongs extends RecyclerView.Adapter<SongListAdapterSongs.ourHolder> {
     Context mcontext;
     ArrayList<Songs> mData;
@@ -82,6 +88,9 @@ public class SongListAdapterSongs extends RecyclerView.Adapter<SongListAdapterSo
         holder.tv1.setText(songs.getSongName());
         if(songs.getCoverArt()!=null){
             Bitmap bm = BitmapFactory.decodeByteArray(songs.coverArt, 0, songs.coverArt.length);
+            holder.albumArt.setImageBitmap(bm);
+        }else{
+            Bitmap bm = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.noimageavailable);
             holder.albumArt.setImageBitmap(bm);
         }
         holder.tv1.setOnClickListener(new View.OnClickListener() {

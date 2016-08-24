@@ -1,6 +1,9 @@
 package com.example.ashukaushik.fun;
 
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,11 +27,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SongListAdapterSongs.songsListListener,
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SongListAdapterSongs.songsListListener,
         SongListAdapterAlbums.songsListListener, SongListAdapterArtists.songsListListener {
     static ArrayList<Songs> songs=new ArrayList<>();
     static ArrayList<SongsWithoutCoverArt> songsWithoutCoverArt =new ArrayList<>();
@@ -36,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static SongListAdapterSongs songsAdapter;
     static SongListAdapterAlbums albumsAdapter;
     static SongListAdapterArtists artistsAdapter;
-
+//    static ListView lv;
     static RecyclerView rv;
     DrawerLayout drawer;
     Toolbar toolbar;
@@ -159,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         intent.putExtra("pos",i);
         final ArrayList<SongsWithoutCoverArt> finalSongs = songsWithoutCoverArt;
         intent.putExtra("List", finalSongs);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setContentTitle(songs.get(i).getSongName())
+                .setContentText("ALBUM"+songs.get(i).getSongAlbum())
+                .setSmallIcon(android.R.drawable.btn_radio);
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manager.notify(1,builder.build());
         startActivity(intent);
 
     }
@@ -196,6 +210,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LinearLayoutManager lm=new LinearLayoutManager(getActivity());
             lm.setOrientation(LinearLayoutManager.VERTICAL);
             rv.setLayoutManager(lm);
+//            ListView lv=(ListView)rootView.findViewById(R.id.listView) ;
+//            lv=(ListView)rootView.findViewById(R.id.listView) ;
+//            songsAdapter=new SongListAdapterSongs(getActivity(),songs);
+//            lv.setAdapter(songsAdapter);
+//            final ArrayList<SongsWithoutCoverArt> finalSongs = songsWithoutCoverArt;
+//            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Intent i=new Intent();
+//                    i.setClass(getContext(),NowPlaying.class);
+//                    i.putExtra("pos",position);
+//                    i.putExtra("List", finalSongs);
+//                    startActivity(i);
+//                }
+//            });
             return rootView;
         }
     }
@@ -232,6 +261,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LinearLayoutManager lm=new LinearLayoutManager(getActivity());
             lm.setOrientation(LinearLayoutManager.VERTICAL);
             rv.setLayoutManager(lm);
+//            ListView lv=(ListView)rootView.findViewById(R.id.listView) ;
+//            lv=(ListView)rootView.findViewById(R.id.listView) ;
+//            albumsAdapter=new SongListAdapterAlbums(getActivity(),songs);
+//            lv.setAdapter(albumsAdapter);
+//            final ArrayList<SongsWithoutCoverArt> finalSongs = songsWithoutCoverArt;
+//            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Intent i=new Intent();
+//                    i.setClass(getContext(),NowPlaying.class);
+//                    i.putExtra("pos",position);
+//                    i.putExtra("List", finalSongs);
+//                    startActivity(i);
+//                }
+//            });
             return rootView;
         }
     }
@@ -268,6 +312,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LinearLayoutManager lm=new LinearLayoutManager(getActivity());
             lm.setOrientation(LinearLayoutManager.VERTICAL);
             rv.setLayoutManager(lm);
+//            ListView lv=(ListView)rootView.findViewById(R.id.listView) ;
+//            lv=(ListView)rootView.findViewById(R.id.listView) ;
+//            artistsAdapter=new SongListAdapterArtists(getActivity(),songs);
+//            lv.setAdapter(artistsAdapter);
+//            final ArrayList<SongsWithoutCoverArt> finalSongs = songsWithoutCoverArt;
+//            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    Intent i=new Intent();
+//                    i.setClass(getContext(),NowPlaying.class);
+//                    i.putExtra("pos",position);
+//                    i.putExtra("List", finalSongs);
+//                    startActivity(i);
+//                }
+//            });
             return rootView;
         }
     }

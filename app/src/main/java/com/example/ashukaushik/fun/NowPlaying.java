@@ -2,6 +2,7 @@ package com.example.ashukaushik.fun;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,9 +19,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
@@ -45,7 +49,10 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     Button mNextSongButton;
     Thread mThreadSeekBar;
     TextView mSongNameTextView;
-    CircleImageView mAlbumArtImageView;
+    ImageView mAlbumArtImageView;
+    String temp;
+    EditText mgetInfoEditText;
+    Button mgetInfoOKButton;
 
     @Override
     public void onBackPressed() {
@@ -59,7 +66,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_now_playing);
 
         mSongNameTextView=(TextView)findViewById(R.id.songNameTextView);
-        mAlbumArtImageView=(CircleImageView) findViewById(R.id.albumArtImageView);
+        mAlbumArtImageView=(ImageView) findViewById(R.id.albumArtImageView);
         mSeekBar = (SeekBar) findViewById(R.id.seekBar);
         mThreadSeekBar = new Thread() {
             @Override
@@ -154,6 +161,55 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.getInfo){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final EditText input = new EditText(this);
+            input.setId(0);
+            builder.setView(input);
+            builder.setTitle("GET INFO");
+            builder.setMessage("Enter Correct song name");
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String value = input.getText().toString();
+                    Retrofit retrofit=new Retrofit.Builder().baseUrl("https://itunes.apple.com/")
+                            .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create())).build();
+
+                    final SongInfoInterface songInterface=retrofit.create(SongInfoInterface.class);
+                    Call<SongInfoResponse> call=songInterface.getSong(value,"in",1);
+                    call.enqueue(new Callback<SongInfoResponse>() {
+                        @Override
+                        public void onResponse(Call<SongInfoResponse> call, Response<SongInfoResponse> response) {
+                            SongInfoResponse obj=response.body();
+                            if(obj.getResults().size()==0){
+                                return;
+                            }
+                            else{
+                                Picasso.with(getApplicationContext()).load(obj.getResults().get(0).getArtworkUrl100()).into(mAlbumArtImageView);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SongInfoResponse> call, Throwable t) {
+
+                        }
+                    });
+                    dialog.cancel();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.setTitle("GET INFO");
+            alert.show();
+
+
 //            Retrofit retrofit=new Retrofit.Builder().baseUrl("https://itunes.apple.com/")
 //                    .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create())).build();
 //
@@ -239,6 +295,7 @@ public class NowPlaying extends AppCompatActivity implements View.OnClickListene
     public void setScreen(int position, ArrayList<SongsWithoutCoverArt> songsList){
         MediaMetadataRetriever mMediaMetadataRetriever=new MediaMetadataRetriever();
         mMediaMetadataRetriever.setDataSource(songsList.get(position).getSongPath());
+
         String titleName = mMediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
         if(titleName==null){
             mSongNameTextView.setText("JUST ENJOY");
